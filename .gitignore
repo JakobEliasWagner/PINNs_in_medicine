@@ -1,5 +1,8 @@
 # pycharm specific stuff
 .idea/
 
-# environment specific stuff
+# venv specific stuff
 venv/
+
+# python stuff for submodules
+**/__pycache__/
