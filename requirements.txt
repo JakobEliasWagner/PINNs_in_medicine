@@ -1,0 +1,5 @@
+torch
+pre-commit
+isort
+black
+flake8

@@ -1,4 +1,4 @@
-# PINNs_in_medicine
+# Pysics Informed Neural Networks in Medicine
 *Code by Jakob*
 
 [![Python 3.9](https://img.shields.io/badge/Python-3.11-blue)](https://www.python.org/downloads/release/python-3113/)
