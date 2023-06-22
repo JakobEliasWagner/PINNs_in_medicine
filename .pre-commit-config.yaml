@@ -18,3 +18,11 @@ repos:
   rev: 3.9.2
   hooks:
   - id: flake8
+- repo: local
+  hooks:
+    - id: unittests
+      name: project unit tests
+      entry: python -m unittest
+      language: system
+      pass_filenames: false
+      args: ["discover"]
