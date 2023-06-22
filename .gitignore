@@ -1,0 +1,5 @@
+# pycharm specific stuff
+.idea/
+
+# environment specific stuff
+venv/
