@@ -9,30 +9,19 @@ import torch
 import torch.nn as nn
 
 
-class ScaleFunc(torch.autograd.Function):
-    @staticmethod
-    def forward(ctx, ipt, scale, shift):
-        """
-        Scales the input with the formula f = (ipt - shift) / scale. Corresponds to simple min-max-scaling
-        :param ctx:
-        :param ipt: Tensor, input
-        :param scale:
-        :param shift:
-        :return:
-        """
-        ctx.save_for_backward(ipt, scale)
-        return ipt * scale
-
-    @staticmethod
-    def backward(ctx, grad_output):
-        ipt, scale = ctx.saved_variables
-        return grad_output * scale, torch.mean(grad_output * ipt)
-
-
 class ScaleLayer(nn.Module):
-    def __init__(self, initial_value=1e-3):
+    def __init__(
+        self,
+        old_min: float,
+        old_max: float,
+        new_min: float = -1.0,
+        new_max: float = 1.0,
+    ):
         super().__init__()
-        self.scale = nn.Parameter(torch.FloatTensor(1).fill_(initial_value))
+        alpha = (new_max - new_min) / (old_max - old_min)
+        beta = -alpha * old_min + new_min
+        self.alpha = nn.Parameter(torch.FloatTensor(1).fill_(alpha))
+        self.beta = nn.Parameter(torch.FloatTensor(1).fill_(beta))
 
     def forward(self, ipt):
-        return ScaleFunc.apply(input, self.scale)
+        return ipt * self.alpha + self.beta
