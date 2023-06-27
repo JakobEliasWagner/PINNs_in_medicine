@@ -6,3 +6,6 @@ venv/
 
 # python stuff for submodules
 **/__pycache__/
+
+# project specific stuff
+runs/
