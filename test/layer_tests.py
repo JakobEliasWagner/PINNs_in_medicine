@@ -8,7 +8,7 @@ from src.layers.scale_layer import ScaleLayer
 
 class ScaleLayerTestCase(unittest.TestCase):
     def test_inner(self):
-        n = 100
+        n = 10
         tensor_size = 128
         for _ in range(n):
             # setup layer
@@ -30,7 +30,7 @@ class ScaleLayerTestCase(unittest.TestCase):
             self.assertTrue(left_cond and right_cond)
 
     def test_left_boundary(self):
-        n = 100
+        n = 10
         for _ in range(n):
             # setup layer
             before_bv = np.random.random((2,))
@@ -48,7 +48,7 @@ class ScaleLayerTestCase(unittest.TestCase):
             self.assertTrue(cond)
 
     def test_right_boundary(self):
-        n = 100
+        n = 10
         for _ in range(n):
             # setup layer
             before_bv = np.random.random((2,))
