@@ -6,4 +6,3 @@ flake8
 numpy
 matplotlib
 tensorboard
-scipy
