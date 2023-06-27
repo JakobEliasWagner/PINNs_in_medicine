@@ -3,3 +3,7 @@ pre-commit
 isort
 black
 flake8
+numpy
+matplotlib
+tensorboard
+scipy
