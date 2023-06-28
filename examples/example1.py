@@ -109,19 +109,22 @@ def generate_plot(
 
 def generate_fourier1D(
     x: torch.tensor,
+    gt: torch.tensor,
     model: nn.Module,
 ):
     f_pred = model(x)
     # transform prediction
     ff = torch.fft.fft(f_pred).detach().numpy()
+    fgt = torch.fft.fft(gt).detach().numpy()
 
-    T = 1 / ((RIGHT_BOUNDARY - LEFT_BOUNDARY) * PLOT_SAMPLES)  # sample frequency
     N = x.shape[0]  # samples
+    T = 1 / ((RIGHT_BOUNDARY - LEFT_BOUNDARY) * N)  # sample frequency
     xf = np.linspace(0.0, 1.0 / (2.0 * T), N // 2)
 
     # plot
     fig, ax = plt.subplots()
-    ax.plot(xf, 2.0 / N * np.abs(ff[: N // 2]))
+    ax.plot(xf, 2.0 / N * np.abs(ff[: N // 2]), "b")
+    ax.plot(xf, 2.0 / N * np.abs(fgt[: N // 2]), "r--")
 
     return fig
 
@@ -189,7 +192,7 @@ if __name__ == "__main__":
             img = generate_plot(x, model, x, gt, x_sample, gt_sample)
             writer.add_figure("prediction", img, epoch)
 
-            img = generate_fourier1D(x, model)
+            img = generate_fourier1D(x, gt, model)
             writer.add_figure("fourier", img, epoch)
 
     writer.close()
