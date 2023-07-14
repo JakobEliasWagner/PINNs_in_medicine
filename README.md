@@ -25,3 +25,16 @@ black --check .
 flake8 .
 isort --check-only .
 ```
+
+## Installation and Setup
+
+Most conventional packages can be installed by running
+```bash
+pip install -r requirements.txt
+```
+
+Additional packages concerning conventional means of solving PDEs (FEniCSx) can only be installed by running
+
+```bash
+conda install -c conda-forge fenics-dolfinx mpich pyvista
+```
