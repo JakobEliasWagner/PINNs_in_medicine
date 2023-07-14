@@ -4,8 +4,11 @@ import torch
 from tqdm import tqdm
 
 N = 63
-num_plots = 100
-epochs = 300
+num_plots = 240
+epochs = 4500
+
+
+# TODO scale solutions the same way!
 
 
 def generate_plots(x: torch.Tensor, epoch: int):
@@ -16,13 +19,17 @@ def generate_plots(x: torch.Tensor, epoch: int):
     F = torch.log10(torch.abs(F))
 
     fig, ax = plt.subplots()
-    ax.imshow(F.detach().numpy())
+    values = F.detach().numpy()
+    scale = max(np.abs(values.min()), np.abs(values.max()))
+    ax.imshow(values, vmin=-scale, vmax=scale, cmap="binary")
     plt.savefig(f"plots/fourier/fourier_{epoch}.png")
     plt.close(fig)
 
     fig, ax = plt.subplots()
-    ax.imshow(vals.detach().numpy())
-    plt.savefig(f"plots/res/res_{epoch}.png")
+    values = vals.detach().numpy()
+    scale = max(np.abs(values.min()), np.abs(values.max()))
+    ax.imshow(values, vmin=-scale, vmax=scale, cmap="bwr")
+    plt.savefig(f"plots/pred/res_{epoch}.png")
     plt.close(fig)
 
 
@@ -56,7 +63,13 @@ if __name__ == "__main__":
         for j in range(1, N):
             x = i / (N + 1)
             y = j / (N + 1)
-            b[j + i * N] = -2 * np.pi**2 * np.sin(42 * np.pi * x) * np.sin(np.pi * y)
+            b[j + i * N] = (
+                -2
+                * np.pi**2
+                * np.sin(np.pi * x)
+                * np.sin(4 * np.pi * x)
+                * np.sin(np.pi * y)
+            )
 
     D_inv = 1 / alpha * torch.eye(N**2)
     LU = A - alpha * torch.eye(N**2)
@@ -64,8 +77,9 @@ if __name__ == "__main__":
     x = torch.rand((N**2))
     for i in tqdm(range(epochs)):
         x = torch.matmul(D_inv, b - torch.matmul(LU, x))
-        if i % (epochs // num_plots + 1) == 0:
+        if i % (epochs // num_plots) == 0:
             generate_plots(x, i)
+            print(f"Residual: {torch.abs(torch.mean(torch.matmul(A, x) - b)):.4f}")
 
     x = torch.reshape(x, (N, N)).detach().numpy()
 
